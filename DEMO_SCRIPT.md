@@ -6,103 +6,78 @@
 - [ ] GitHub repo exists: `iamnatalie/claude-code-demo`
 - [ ] Node.js app already in `app/` (tests passing)
 - [ ] No `.github/workflows/` directory yet (created during demo)
-- [ ] No `agent-os/specs/` content yet (created live)
 - [ ] Claude in Chrome extension is running
 
 ---
 
-## Act 1: Set the Scene (1 min)
+## Act 1: The Prompt (5-8 min)
 
-**Say:** "We have a simple Node.js Express app already built and pushed to GitHub. Now we need a CI/CD pipeline — a GitHub Actions workflow to build, test, and deploy it. Let's use Claude Code to do the whole thing."
+**Say:** "We have a simple Express app. I'm going to give Claude one prompt and let it do everything."
 
-Quick show:
+Paste into Claude Code:
 ```
-cat app/index.js
-cd app && npm test
-```
-
----
-
-## Act 2: Create the Spec Live (5 min)
-
-**Say:** "First, let's shape what we're building using Agent OS."
-
-Run in Claude Code:
-```
-/shape-spec
-```
-
-When prompted, describe:
-> "Create a GitHub Actions workflow that deploys our Node.js Express app. The workflow should trigger on push to main, checkout the code, setup Node, install dependencies, run tests, build, and deploy. For the deploy step, have it call a deployment API endpoint."
-
-Walk through the interactive shaping — let the audience see:
-- Agent OS asking structured questions about scope
-- Standards being surfaced automatically
-- A spec folder being created with plan, shape, tasks
-- Clear task breakdown
-
-**Key point:** "Before writing any code, we shape the work. This is how Agent OS keeps changes organized."
-
----
-
-## Act 3: Agent Team Executes Tasks (4-6 min)
-
-**Say:** "Now I'll spin up a team of agents to build this in parallel."
-
-Run in Claude Code:
-```
-/execute-tasks
+write a ci for the app in app folder. also test it works using chrome. run everything you can in teams
 ```
 
 **What the audience sees:**
-- Team being created
-- Agents spawning and claiming tasks
-- GitHub Actions workflow YAML being created
-- README being updated
-- Task board updating in real-time
+- Claude enters plan mode, explores the codebase
+- Creates an agent team (devops-engineer, test-writer, docs-writer)
+- Agents work in parallel — workflow YAML, tests, README
+- Claude browser-tests the app in Chrome (navigates to localhost:3000, checks endpoints)
+- Claude commits and pushes to trigger the workflow
 
-**After agents finish, quick show:**
-```
-cat .github/workflows/deploy.yml
-```
+**Key point:** "One prompt. Teams. Browser testing. All automatic."
 
 ---
 
-## Act 4: Push and Trigger (2 min)
+## Act 2: Deploy to GitHub Pages (3-5 min)
 
-**Say:** "Now let's push and watch what happens."
+**Say:** "Now we want to actually deploy this to GitHub Pages. Let's tell Claude."
 
-Claude commits and pushes — this triggers the workflow automatically.
+Paste into Claude Code:
+```
+change it to deploy to github pages
+```
+
+**What happens:**
+- Claude updates `deploy.yml` — swaps S3 step for `actions/upload-pages-artifact` + `actions/deploy-pages`
+- Adds `permissions` (pages: write, id-token: write) and `environment` block
+- Commits and pushes
 
 ---
 
-## Act 5: Chrome Debugging — The Star (6-8 min)
+## Act 3: Chrome Debugging — The Star (5-8 min)
 
-**Say:** "Now here's where it gets interesting. Claude can open Chrome, navigate to GitHub, and read the CI logs — just like you do every day."
+**Say:** "Now here's the cool part. Claude can open Chrome, go to GitHub Actions, and debug the failure — just like you would."
+
+Paste into Claude Code:
+```
+test the gh actions workflow runs well using chrome
+```
 
 **What Claude does in Chrome:**
-1. Opens GitHub repo → Actions tab
-2. Finds the running workflow
-3. Clicks into it → expands each step
-4. Reads the logs step by step:
+1. Opens GitHub repo Actions tab
+2. Finds the workflow run — clicks into it
+3. Expands the job steps and reads the logs:
    - Checkout — success
-   - Setup Node — success
+   - Setup Node.js — success
    - Install deps — success
    - Run tests — success
    - Build — success
-   - **Deploy — FAILS** (can't reach the deployment endpoint)
-5. Claude reads the error and explains what went wrong
+   - **Upload to GitHub Pages — FAILS** (`app/dist/: No such file or directory`)
+   - Deploy to GitHub Pages — skipped
+4. Claude reads the error and explains what went wrong
 
-**Say:** "Claude didn't just write the pipeline — it watched it fail in CI and told us exactly what broke. That's the loop."
+**Say:** "Claude didn't just write the pipeline — it watched it fail in CI and told us exactly what broke. That's the debugging loop."
 
 ---
 
-## Act 6: Wrap Up (2 min)
+## Act 4: Wrap Up (1-2 min)
 
 **Key takeaways:**
-1. **Agent OS** structured the work — spec first, then parallel execution
-2. **Teams** let agents build simultaneously — not sequentially
-3. **Chrome integration** closes the loop — verify, debug, iterate without leaving the terminal
+1. **One prompt** — CI pipeline, tests, docs, browser verification
+2. **Teams** — agents build in parallel, not sequentially
+3. **Chrome integration** — closes the loop: push, watch CI, read logs, debug
 4. Same flow works for Terraform plans, K8s deploys, infrastructure changes
 
 **Say:** "This is what makes Claude Code different for DevOps — it's not just a code generator. It's an engineer that can push, watch CI, read logs, and debug."
@@ -113,7 +88,6 @@ Claude commits and pushes — this triggers the workflow automatically.
 
 | Problem | Fix |
 |---------|-----|
-| Shape-spec needs plan mode | Enter plan mode first, then run /shape-spec |
 | Agent team hangs | Kill team, create workflow manually as fallback |
 | GitHub push fails | Check SSH keys, try HTTPS |
 | Workflow doesn't trigger | Check if Actions is enabled on the repo |
