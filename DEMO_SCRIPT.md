@@ -4,40 +4,52 @@
 - [ ] Terminal open with claude-code-demo directory
 - [ ] Chrome open and logged into GitHub
 - [ ] GitHub repo exists: `iamnatalie/claude-code-demo`
-- [ ] No existing app/ or .github/ directories (agent team creates these)
+- [ ] No existing app/, .github/, or agent-os/specs/ content (created live)
+- [ ] Claude in Chrome extension is running
 
 ---
 
-## Act 1: Show the Spec (2 min)
+## Act 1: Create the Spec Live (5 min)
 
-**Say:** "I've already shaped a spec for what we're building — a GitHub Actions workflow that deploys a Node.js app."
+**Say:** "Let's start by shaping what we're going to build. I'll use Agent OS to create a spec."
 
+Run in Claude Code:
 ```
-# Show the spec
-cat agent-os/specs/2026-02-24-1500-github-action-deploy-node-app/shape.md
+/shape-spec
 ```
 
-**Key points to mention:**
-- Agent OS specs capture what we're building before we build it
-- The spec defines the agent team split — 4 agents working in parallel
-- The deploy step intentionally fails (we'll debug it in Chrome)
+When prompted, describe:
+> "A simple GitHub Actions workflow that deploys a Node.js Express hello-world app. The workflow should checkout, install deps, run tests, build, and deploy. The deploy step should call a fake endpoint so it intentionally fails — we'll debug it later."
+
+Walk through the interactive shaping:
+- **Scope:** GitHub Action + Express app
+- **Visuals:** None
+- **References:** None (fresh project)
+- **Standards:** global/coding-style, global/error-handling, testing/test-writing
+
+**What the audience sees:**
+- Agent OS asking structured questions
+- A spec folder being created with plan.md, shape.md, tasks.md
+- Clear task breakdown with agent assignments
+
+**Key point:** "Before writing any code, we shape the work. This is how Agent OS keeps complex changes organized."
 
 ---
 
 ## Act 2: Agent Team Creates Everything (4-6 min)
 
-**Say:** "Now I'll spin up 4 agents to build this in parallel."
+**Say:** "Now I'll spin up a team of agents to build this in parallel — 4 agents, each with their own task."
 
-**In Claude Code, the flow will be:**
-1. Create the team with `TeamCreate`
-2. Create tasks from the spec
-3. Spawn 4 agents — each picks up their task
-4. Watch them work simultaneously
+Run in Claude Code:
+```
+/execute-tasks
+```
 
 **What the audience sees:**
+- Team being created
+- 4 agents spawning and claiming tasks
 - Task board updating in real-time
-- 4 agents claiming and completing tasks
-- All files landing within ~60 seconds
+- All files landing simultaneously
 
 **After agents finish, quick show:**
 ```
@@ -53,11 +65,7 @@ cat .github/workflows/deploy.yml
 
 **Say:** "Now let's push this to GitHub and see what happens."
 
-```
-git add .
-git commit -m "Add Node.js app with GitHub Actions deploy workflow"
-git push origin main
-```
+Claude will commit and push — this triggers the workflow automatically.
 
 **Key point:** "The push triggers our workflow automatically."
 
@@ -72,13 +80,13 @@ git push origin main
 2. Finds the running workflow
 3. Clicks into it → expands each step
 4. Reads the logs step by step:
-   - Checkout ✅
-   - Setup Node ✅
-   - Install deps ✅
-   - Run tests ✅
-   - Build ✅
-   - **Deploy ❌** — connection refused to deploy.example.com
-5. Claude reads the error and explains: "The deploy step failed because deploy.example.com doesn't resolve"
+   - Checkout — success
+   - Setup Node — success
+   - Install deps — success
+   - Run tests — success
+   - Build — success
+   - **Deploy — FAILS** (connection refused to deploy.example.com)
+5. Claude reads the error and explains what went wrong
 
 **Say:** "Claude didn't just write the code — it watched it fail in CI and told us exactly what broke. That's the loop."
 
@@ -100,7 +108,8 @@ git push origin main
 
 | Problem | Fix |
 |---------|-----|
-| Agent team hangs | Kill team, show pre-built files as backup |
+| Shape-spec needs plan mode | Enter plan mode first, then run /shape-spec |
+| Agent team hangs | Kill team, create files manually as fallback |
 | GitHub push fails | Check SSH keys, try HTTPS |
 | Workflow doesn't trigger | Check if Actions is enabled on the repo |
 | Chrome can't connect | Verify Claude in Chrome extension is running |
