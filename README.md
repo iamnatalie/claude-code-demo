@@ -1,5 +1,7 @@
 # Claude Code Demo
 
+[![CI](https://github.com/iamnatalie/claude-code-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/iamnatalie/claude-code-demo/actions/workflows/ci.yml)
+
 Demo project showcasing Claude Code Agent OS teams and Chrome browser testing for DevOps workflows.
 
 ## Quick Start
@@ -20,7 +22,7 @@ The server starts on `http://localhost:3000`.
 
 ## CI/CD
 
-The GitHub Actions workflow (`.github/workflows/deploy.yml`) runs on pushes and PRs to `main`. It installs dependencies, runs tests, and builds the app.
+The GitHub Actions workflow (`.github/workflows/ci.yml`) runs on pushes and PRs to `main`. It installs dependencies, runs tests, and builds the app.
 
 **Note:** The deploy step intentionally fails (`exit 1`). This is by design -- the demo uses a broken deploy to showcase debugging CI pipelines with Claude Code and Chrome browser testing.
 
@@ -34,7 +36,7 @@ app/
   __tests__/        # Jest test suite
 .github/
   workflows/
-    deploy.yml      # CI & Deploy workflow
+    ci.yml          # CI workflow (test & build)
 ```
 
 ## Testing
